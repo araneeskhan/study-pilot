@@ -1,3 +1,5 @@
+
+
 // ============================================
 // FILE: src/app/(admin)/x-control-panel-2024/countries/create/page.tsx
 // ============================================
@@ -41,9 +43,7 @@ export default function CreateCountryPage() {
         </Button>
         <div>
           <h1 className="text-3xl font-bold">Add New Country</h1>
-          <p className="text-muted-foreground mt-2">
-            Create a new study destination
-          </p>
+          <p className="text-muted-foreground mt-2">Create a new study destination</p>
         </div>
       </div>
 
@@ -61,3 +61,4 @@ export default function CreateCountryPage() {
     </div>
   );
 }
+
