@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from './jwt';
 import { getAuthCookie } from './cookies';
+import { User } from '@/lib/db/models/User';
 
 export interface AuthenticatedRequest extends NextRequest {
   user?: {
@@ -21,7 +22,7 @@ export async function requireAuth(request: NextRequest) {
       );
     }
 
-    const payload = await verifyToken(token);
+    const payload = verifyToken(token);
     
     if (!payload) {
       return NextResponse.json(
@@ -29,6 +30,13 @@ export async function requireAuth(request: NextRequest) {
         { status: 401 }
       );
     }
+
+    // Add user to request for downstream use
+    (request as AuthenticatedRequest).user = {
+      id: payload.userId,
+      email: payload.email,
+      role: payload.role,
+    };
 
     return null; // No error, authentication successful
   } catch (error) {
@@ -50,7 +58,7 @@ export async function requireAdmin(request: AuthenticatedRequest) {
       );
     }
 
-    const payload = await verifyToken(token);
+    const payload = verifyToken(token);
     
     if (!payload) {
       return NextResponse.json(
@@ -67,7 +75,11 @@ export async function requireAdmin(request: AuthenticatedRequest) {
     }
 
     // Add user to request for downstream use
-    request.user = payload;
+    request.user = {
+      id: payload.userId,
+      email: payload.email,
+      role: payload.role,
+    };
     
     return null; // No error, admin authentication successful
   } catch (error) {
@@ -100,4 +112,13 @@ export function withAdmin(handler: Function) {
     
     return handler(request, ...args);
   };
+}
+
+export async function getCurrentUser(userId: string) {
+  try {
+    const user = await User.findById(userId).select('-password -verification_token -reset_password_token -reset_password_expires');
+    return user;
+  } catch (error) {
+    return null;
+  }
 }

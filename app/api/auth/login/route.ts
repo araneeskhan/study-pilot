@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     const body = await req.json();
-    const validation = validateData(loginSchema, body);
+    const validation = validateData(body, loginSchema);
 
     if (!validation.success) {
       return validationErrorResponse(validation.errors);

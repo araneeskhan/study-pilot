@@ -7,7 +7,7 @@ export function useNotification() {
     addNotification({ type: "success", title, message });
   };
 
-  const showError = (title: string, message?: string) => {
+  const showError = (title: string, message?: string | object) => {
     addNotification({ type: "error", title, message });
   };
 

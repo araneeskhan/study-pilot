@@ -132,3 +132,7 @@ export default function ApplicationsPage() {
             </Card>
           );
         })}
+      </div>
+    </div>
+  );
+}

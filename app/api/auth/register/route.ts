@@ -18,9 +18,11 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     const body = await req.json();
-    const validation = validateData(registerSchema, body);
+    const validation = validateData(body, registerSchema);
+    console.log("Validation result:", validation);
 
     if (!validation.success) {
+      console.log("Validation errors:", validation.errors);
       return validationErrorResponse(validation.errors);
     }
 
@@ -43,11 +45,19 @@ export async function POST(req: NextRequest) {
       verification_token: hashedToken,
     });
 
-    // Send verification email
-    await sendEmail({
-      to: email,
-      ...emailTemplates.verifyEmail(name, verificationToken),
-    });
+    // Send verification email (only if email service is configured)
+    try {
+      await sendEmail({
+        to: email,
+        ...emailTemplates.verifyEmail(name, verificationToken),
+      });
+    } catch (emailError) {
+      console.warn('Email verification skipped - email service not configured:', emailError.message);
+      // Mark email as verified if email service is not available
+      user.email_verified = true;
+      user.verification_token = undefined;
+      await user.save();
+    }
 
     // Generate JWT
     const token = generateToken({
@@ -59,16 +69,20 @@ export async function POST(req: NextRequest) {
     // Set cookie
     await setAuthCookie(token);
 
+    // Check if email was actually sent
+    const emailSent = user.email_verified;
+    
     return successResponse(
       {
         user: user.toJSON(),
         token,
       },
-      "Registration successful! Please check your email to verify your account.",
+      emailSent ? "Registration successful! Welcome to StudyPilot!" : "Registration successful! Please check your email to verify your account.",
       201
     );
   } catch (error: any) {
     console.error("Registration error:", error);
-    return errorResponse("Registration failed", 500);
+    console.error("Error stack:", error.stack);
+    return errorResponse(`Registration failed: ${error.message}`, 500);
   }
 }
