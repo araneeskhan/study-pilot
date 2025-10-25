@@ -11,29 +11,22 @@ import { siteConfig } from "@/config/site";
 
 export function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-white relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-48 h-48 bg-gradient-to-r from-pink-500/20 to-orange-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-gradient-to-r from-blue-500/15 to-cyan-500/15 rounded-full blur-2xl animate-pulse delay-500"></div>
-      </div>
-      
-      <div className="container mx-auto px-4 py-16 relative z-10">
+    <footer className="bg-slate-900 text-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand Section */}
-          <div className="lg:col-span-2 space-y-6">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                <GraduationCap className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <span className="font-bold text-2xl bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent">
-                  {siteConfig.name}
-                </span>
-                <p className="text-sm text-slate-300">Your Education Journey Starts Here</p>
-              </div>
-            </Link>
+            <div className="lg:col-span-2 space-y-6">
+              <Link href="/" className="flex items-center gap-3 group">
+                <div className="p-2 bg-blue-600 rounded-xl">
+                  <GraduationCap className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <span className="font-bold text-2xl text-white">
+                    {siteConfig.name}
+                  </span>
+                  <p className="text-sm text-slate-300">Your Education Journey Starts Here</p>
+                </div>
+              </Link>
             
             <p className="text-slate-300 leading-relaxed max-w-md">
               {siteConfig.description}
@@ -46,9 +39,9 @@ export function Footer() {
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="flex-1 px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
-                <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold px-6 rounded-xl transition-all duration-300">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 rounded-xl">
                   Subscribe
                 </Button>
               </div>
@@ -58,7 +51,7 @@ export function Footer() {
           {/* Navigation Sections */}
           {Object.entries(footerNavigation).map(([key, items]) => (
             <div key={key} className="space-y-4">
-              <h3 className="font-bold text-lg bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent capitalize">
+              <h3 className="font-bold text-lg text-white capitalize">
                 {key}
               </h3>
               <ul className="space-y-3">
@@ -66,12 +59,9 @@ export function Footer() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="text-slate-300 hover:text-white transition-all duration-300 hover:translate-x-1 inline-block group"
+                      className="text-slate-300 hover:text-white transition-colors inline-block"
                     >
-                      <span className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                        {item.title}
-                      </span>
+                      {item.title}
                     </Link>
                   </li>
                 ))}
@@ -88,30 +78,30 @@ export function Footer() {
               <Link 
                 href={siteConfig.links.facebook} 
                 target="_blank"
-                className="p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
+                className="p-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-colors"
               >
-                <Facebook className="h-5 w-5 text-slate-300 group-hover:text-white" />
+                <Facebook className="h-5 w-5 text-slate-300 hover:text-white" />
               </Link>
               <Link 
                 href={siteConfig.links.twitter} 
                 target="_blank"
-                className="p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
+                className="p-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-colors"
               >
-                <Twitter className="h-5 w-5 text-slate-300 group-hover:text-white" />
+                <Twitter className="h-5 w-5 text-slate-300 hover:text-white" />
               </Link>
               <Link 
                 href={siteConfig.links.instagram} 
                 target="_blank"
-                className="p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
+                className="p-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-colors"
               >
-                <Instagram className="h-5 w-5 text-slate-300 group-hover:text-white" />
+                <Instagram className="h-5 w-5 text-slate-300 hover:text-white" />
               </Link>
               <Link 
                 href={siteConfig.links.linkedin} 
                 target="_blank"
-                className="p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
+                className="p-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-colors"
               >
-                <Linkedin className="h-5 w-5 text-slate-300 group-hover:text-white" />
+                <Linkedin className="h-5 w-5 text-slate-300 hover:text-white" />
               </Link>
             </div>
             
@@ -127,9 +117,6 @@ export function Footer() {
           </div>
         </div>
       </div>
-      
-      {/* Bottom Gradient Bar */}
-      <div className="h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
     </footer>
   );
 }
