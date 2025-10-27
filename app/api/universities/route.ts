@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
       await connectDB();
 
       const body = await req.json();
-      const validation = validateData(universitySchema, body);
+      const validation = validateData(body, universitySchema);
 
       if (!validation.success) {
         return validationErrorResponse(validation.errors);

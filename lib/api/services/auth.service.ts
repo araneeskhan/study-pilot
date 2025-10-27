@@ -1,18 +1,19 @@
 import { apiClient } from "../client";
 import { API_ENDPOINTS } from "../endpoints";
 import { LoginFormData, RegisterFormData } from "@/lib/validation/auth";
+import { AdminSignupFormData } from "@/lib/validation/admin";
 import { User } from "@/types";
 
 export const authService = {
   async login(data: LoginFormData) {
-    return apiClient.post<{ user: User; token: string }>(
+    return apiClient.post<{ data: { user: User; token: string } }>(
       API_ENDPOINTS.AUTH.LOGIN,
       data
     );
   },
 
   async register(data: RegisterFormData) {
-    return apiClient.post<{ user: User; token: string }>(
+    return apiClient.post<{ data: { user: User; token: string } }>(
       API_ENDPOINTS.AUTH.REGISTER,
       data
     );
@@ -36,5 +37,9 @@ export const authService = {
 
   async verifyEmail(token: string) {
     return apiClient.post(API_ENDPOINTS.AUTH.VERIFY_EMAIL, { token });
+  },
+
+  async adminSignup(data: AdminSignupFormData) {
+    return apiClient.post<{ data: { user: User; token: string } }>("/admin/setup", data);
   },
 };

@@ -46,7 +46,7 @@ export async function PUT(
       await connectDB();
 
       const body = await req.json();
-      const validation = validateData(universitySchema.partial(), body);
+      const validation = validateData(body, universitySchema.partial());
 
       if (!validation.success) {
         return validationErrorResponse(validation.errors);

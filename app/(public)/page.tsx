@@ -54,9 +54,7 @@ export default async function HomePage() {
                 Search universities, programs, and scholarships to match your goals.
               </p>
             </div>
-            <div className="flex justify-center">
-              <SearchBar className="w-full max-w-2xl" />
-            </div>
+            <SearchBar />
           </div>
         </div>
       </section>
@@ -64,8 +62,8 @@ export default async function HomePage() {
       {/* Featured Countries */}
       <section className="py-16 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 flex flex-col lg:flex-row items-center justify-between gap-4">
-            <div className="text-center lg:text-left">
+          <div className="mb-8 flex items-center justify-between">
+            <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 mb-3">
                 <Star className="h-4 w-4" />
                 <span className="text-xs font-medium">Popular Destinations</span>
@@ -91,8 +89,8 @@ export default async function HomePage() {
       {/* Top Universities */}
       <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 flex flex-col lg:flex-row items-center justify-between gap-4">
-            <div className="text-center lg:text-left">
+          <div className="mb-8 flex items-center justify-between">
+            <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 mb-3">
                 <TrendingUp className="h-4 w-4" />
                 <span className="text-xs font-medium">Top Ranked</span>
@@ -118,8 +116,8 @@ export default async function HomePage() {
       {/* Latest Scholarships */}
       <section className="py-16 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 flex flex-col lg:flex-row items-center justify-between gap-4">
-            <div className="text-center lg:text-left">
+          <div className="mb-8 flex items-center justify-between">
+            <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 mb-3">
                 <Users className="h-4 w-4" />
                 <span className="text-xs font-medium">Funding Opportunities</span>

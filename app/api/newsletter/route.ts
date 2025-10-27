@@ -11,7 +11,7 @@ import { newsletterSchema } from "@/lib/validation/newsletter";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const validation = validateData(newsletterSchema, body);
+    const validation = validateData(body, newsletterSchema);
 
     if (!validation.success) {
       return validationErrorResponse(validation.errors);

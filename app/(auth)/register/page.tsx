@@ -34,8 +34,8 @@ export default function RegisterPage() {
 
   const registerMutation = useMutation({
     mutationFn: authService.register,
-    onSuccess: (data) => {
-      login(data.user);
+    onSuccess: (response) => {
+      login(response.data.user);
       showSuccess("Account created successfully! Please check your email to verify your account.");
       router.push("/dashboard");
     },

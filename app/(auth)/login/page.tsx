@@ -41,10 +41,16 @@ export default function LoginPage() {
 
   const loginMutation = useMutation({
     mutationFn: authService.login,
-    onSuccess: (data) => {
-      login(data.user);
+    onSuccess: (response) => {
+      login(response.data.user);
       showSuccess("Login successful!");
-      router.push("/dashboard");
+      // Redirect to admin dashboard if user is admin, otherwise regular dashboard
+      if (response.data.user.role === 'admin') {
+        router.push("/x-control-panel-2024");
+      } else {
+        router.push("/dashboard");
+      }
+      router.refresh(); // Force refresh to update navigation
     },
     onError: (error) => {
       showError("Login failed", handleApiError(error));

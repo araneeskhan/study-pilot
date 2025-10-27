@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
       await connectDB();
 
       const body = await req.json();
-      const validation = validateData(scholarshipSchema, body);
+      const validation = validateData(body, scholarshipSchema);
 
       if (!validation.success) {
         return validationErrorResponse(validation.errors);

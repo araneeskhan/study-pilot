@@ -43,7 +43,7 @@ export async function PUT(
       await connectDB();
 
       const body = await req.json();
-      const validation = validateData(countrySchema.partial(), body);
+      const validation = validateData(body, countrySchema.partial());
 
       if (!validation.success) {
         return validationErrorResponse(validation.errors);
