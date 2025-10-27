@@ -13,7 +13,22 @@ export interface AuthenticatedRequest extends NextRequest {
 
 export async function requireAuth(request: NextRequest) {
   try {
-    const token = getAuthCookie(request);
+    // Get token from Authorization header or cookie
+    const authHeader = request.headers.get('authorization');
+    let token = authHeader ? authHeader.replace('Bearer ', '') : null;
+    
+    // If no token in header, try to get from cookie
+    if (!token) {
+      const cookieHeader = request.headers.get('cookie');
+      if (cookieHeader) {
+        const authTokenMatch = cookieHeader.match(/auth-token=([^;]+)/);
+        token = authTokenMatch ? authTokenMatch[1] : null;
+      }
+    }
+    
+    console.log('Auth middleware - Token found:', !!token);
+    console.log('Auth middleware - Authorization header:', !!authHeader);
+    console.log('Auth middleware - Cookie header:', !!request.headers.get('cookie'));
     
     if (!token) {
       return NextResponse.json(
@@ -49,7 +64,18 @@ export async function requireAuth(request: NextRequest) {
 
 export async function requireAdmin(request: AuthenticatedRequest) {
   try {
-    const token = getAuthCookie(request);
+    // Get token from Authorization header or cookie
+    const authHeader = request.headers.get('authorization');
+    let token = authHeader ? authHeader.replace('Bearer ', '') : null;
+    
+    // If no token in header, try to get from cookie
+    if (!token) {
+      const cookieHeader = request.headers.get('cookie');
+      if (cookieHeader) {
+        const authTokenMatch = cookieHeader.match(/auth-token=([^;]+)/);
+        token = authTokenMatch ? authTokenMatch[1] : null;
+      }
+    }
     
     if (!token) {
       return NextResponse.json(

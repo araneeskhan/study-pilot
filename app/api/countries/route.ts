@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/db/mongodb";
 import { Country } from "@/lib/db/models/Country";
-import { requireAdmin, optionalAuth } from "@/lib/auth/middleware";
+import { withAdmin } from "@/lib/auth/middleware";
 import {
   successResponse,
   errorResponse,
@@ -57,29 +57,40 @@ export async function GET(req: NextRequest) {
 }
 
 // POST - Create country (Admin only)
-export async function POST(req: NextRequest) {
-  return requireAdmin(req, async (req, user) => {
+export const POST = withAdmin(async (req: NextRequest) => {
+  try {
+    console.log('Country creation - Starting withAdmin handler');
+    await connectDB();
+
+    let body;
     try {
-      await connectDB();
-
-      const body = await req.json();
-      const validation = validateData(body, countrySchema);
-
-      if (!validation.success) {
-        return validationErrorResponse(validation.errors);
-      }
-
-      const country = await Country.create(validation.data);
-
-      return successResponse(country, "Country created successfully", 201);
-    } catch (error: any) {
-      console.error("Create country error:", error);
-      
-      if (error.code === 11000) {
-        return errorResponse("Country already exists", 409);
-      }
-      
-      return errorResponse("Failed to create country", 500);
+      body = await req.json();
+      console.log('Country creation request body:', JSON.stringify(body, null, 2));
+    } catch (parseError) {
+      console.error('Failed to parse request body:', parseError);
+      return errorResponse("Invalid request body", 400);
     }
-  });
-}
+
+    const validation = validateData(body, countrySchema);
+    console.log('Validation result:', validation);
+
+    if (!validation.success) {
+      console.log('Validation errors:', validation.errors);
+      return validationErrorResponse(validation.errors || []);
+    }
+
+    const country = await Country.create(validation.data);
+    console.log('Country created successfully:', country._id);
+
+    return successResponse(country, "Country created successfully", 201);
+  } catch (error: any) {
+    console.error("Create country error:", error);
+    console.error("Error stack:", error.stack);
+    
+    if (error.code === 11000) {
+      return errorResponse("Country already exists", 409);
+    }
+    
+    return errorResponse("Failed to create country", 500);
+  }
+});

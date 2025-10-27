@@ -23,9 +23,14 @@ interface CountryFormProps {
 }
 
 export function CountryForm({ initialData, onSubmit, isLoading }: CountryFormProps) {
-  const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<CountryFormData>({
+  const { register, handleSubmit, formState: { errors, isValid, isDirty }, watch, setValue } = useForm<CountryFormData>({
     resolver: zodResolver(countrySchema),
     defaultValues: initialData || {
+      name: "",
+      flag: "",
+      description: "",
+      education_system: "",
+      visa_info: "",
       tuition_fees: {
         bachelor: { min: 0, max: 0, currency: "USD" },
         master: { min: 0, max: 0, currency: "USD" },
@@ -39,10 +44,34 @@ export function CountryForm({ initialData, onSubmit, isLoading }: CountryFormPro
       featured: false,
       meta: { title: "", description: "" },
     },
+    mode: "onChange",
   });
 
+  const handleFormSubmit = async (data: CountryFormData) => {
+    try {
+      console.log("Submitting country data:", data);
+      console.log("Form validation state:", { isValid, isDirty, errors });
+      await onSubmit(data);
+    } catch (error) {
+      console.error("Form submission error:", error);
+      throw error;
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
+      {Object.keys(errors).length > 0 && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h3 className="text-sm font-semibold text-red-800 mb-2">Please fix the following errors:</h3>
+          <ul className="text-sm text-red-700 space-y-1">
+            {Object.entries(errors).map(([field, error]) => (
+              <li key={field}>
+                <strong>{field.replace(/_/g, ' ')}:</strong> {error.message}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <Label htmlFor="name">Country Name *</Label>
@@ -144,8 +173,41 @@ export function CountryForm({ initialData, onSubmit, isLoading }: CountryFormPro
       </div>
 
       <div>
+        <Label>Language Requirements (comma-separated, format: IELTS:6.5, TOEFL:90)</Label>
+        <Input 
+          placeholder="IELTS:6.5, TOEFL:90, PTE:65" 
+          {...register("language_requirements", {
+            setValueAs: (value: any) => {
+              if (typeof value === 'string' && value.trim()) {
+                return value.split(',').map((req: string) => {
+                  const [test, score] = req.split(':');
+                  return {
+                    test: test ? test.trim() : '',
+                    min_score: score && !isNaN(parseFloat(score.trim())) ? parseFloat(score.trim()) : 0
+                  };
+                }).filter(req => req.test.length > 0);
+              }
+              return [];
+            }
+          })}
+        />
+        {errors.language_requirements && <p className="text-sm text-destructive mt-1">{errors.language_requirements.message}</p>}
+      </div>
+
+      <div>
         <Label>Popular Cities (comma-separated)</Label>
-        <Input placeholder="New York, Los Angeles, Boston" {...register("popular_cities")} />
+        <Input 
+          placeholder="New York, Los Angeles, Boston" 
+          {...register("popular_cities", {
+            setValueAs: (value: any) => {
+              if (typeof value === 'string' && value.trim()) {
+                return value.split(',').map((city: string) => city.trim()).filter(city => city.length > 0);
+              }
+              return [];
+            }
+          })}
+        />
+        {errors.popular_cities && <p className="text-sm text-destructive mt-1">{errors.popular_cities.message}</p>}
       </div>
 
       <div className="flex items-center justify-between">

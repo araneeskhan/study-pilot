@@ -21,7 +21,7 @@ import { formatCurrency } from "@/lib/utils";
 async function getCountry(slug: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/countries/${slug}`, {
+    const res = await fetch(`${baseUrl}/api/countries/slug/${slug}`, {
       cache: "no-store",
     });
     if (!res.ok) return null;
@@ -35,9 +35,10 @@ async function getCountry(slug: string) {
 export default async function CountryDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const country = await getCountry(params.slug);
+  const { slug } = await params;
+  const country = await getCountry(slug);
 
   if (!country) {
     notFound();

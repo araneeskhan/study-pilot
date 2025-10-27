@@ -1,6 +1,7 @@
 // Form data types for admin
 export interface CountryFormData {
   name: string;
+  flag: string;
   description: string;
   education_system: string;
   tuition_fees: {

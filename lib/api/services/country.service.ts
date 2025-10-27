@@ -20,6 +20,7 @@ export const countryService = {
   },
 
   async create(data: CountryFormData) {
+    console.log('Country service - Creating country with data:', data);
     return apiClient.post<{ data: Country }>(API_ENDPOINTS.COUNTRIES.CREATE, data);
   },
 

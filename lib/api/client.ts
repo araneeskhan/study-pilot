@@ -40,6 +40,14 @@ class ApiClient {
       ...fetchOptions.headers,
     };
 
+    // Debug logging
+    console.log(`API Request: ${method} ${url}`);
+    console.log(`Request Headers:`, headers);
+    console.log(`Using credentials:`, fetchOptions.credentials);
+    if (fetchOptions.body) {
+      console.log(`Request Body:`, fetchOptions.body);
+    }
+
     try {
       const response = await fetch(url, {
         method,
@@ -52,10 +60,27 @@ class ApiClient {
       const contentType = response.headers.get("content-type");
       const hasJson = contentType?.includes("application/json");
 
+      console.log(`API Response: ${response.status} ${response.statusText}`);
+
       if (!response.ok) {
-        const errorData = hasJson ? await response.json() : { message: response.statusText };
+        let errorData;
+        try {
+          errorData = hasJson ? await response.json() : { message: response.statusText };
+        } catch (parseError) {
+          console.error('Failed to parse error response:', parseError);
+          errorData = { message: response.statusText || 'An error occurred' };
+        }
+        
+        console.error(`API Error Response:`, {
+          status: response.status,
+          statusText: response.statusText,
+          url: url,
+          errorData: errorData,
+          headers: Object.fromEntries(response.headers.entries())
+        });
+        
         throw new ApiError(
-          errorData.message || "An error occurred",
+          errorData.message || errorData.error || response.statusText || "An error occurred",
           response.status,
           errorData
         );

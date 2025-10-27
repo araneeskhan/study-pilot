@@ -6,7 +6,6 @@ import {
   successResponse,
   errorResponse,
   notFoundResponse,
-  noContentResponse,
   validationErrorResponse,
 } from "@/lib/utils/api-response";
 import { validateData } from "@/lib/utils/validation-helper";
@@ -15,12 +14,13 @@ import { countrySchema } from "@/lib/validation/country";
 // GET - Get single country
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const country = await Country.findById(params.id);
+    const { id } = await params;
+    const country = await Country.findById(id);
 
     if (!country) {
       return notFoundResponse("Country not found");
@@ -36,12 +36,13 @@ export async function GET(
 // PUT - Update country (Admin only)
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  return requireAdmin(req, async (req, user) => {
+  return requireAdmin(req, async () => {
     try {
       await connectDB();
 
+      const { id } = await params;
       const body = await req.json();
       const validation = validateData(body, countrySchema.partial());
 
@@ -50,7 +51,7 @@ export async function PUT(
       }
 
       const country = await Country.findByIdAndUpdate(
-        params.id,
+        id,
         validation.data,
         { new: true, runValidators: true }
       );
@@ -70,19 +71,20 @@ export async function PUT(
 // DELETE - Delete country (Admin only)
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  return requireAdmin(req, async (req, user) => {
+  return requireAdmin(req, async () => {
     try {
       await connectDB();
 
-      const country = await Country.findByIdAndDelete(params.id);
+      const { id } = await params;
+      const country = await Country.findByIdAndDelete(id);
 
       if (!country) {
         return notFoundResponse("Country not found");
       }
 
-      return noContentResponse();
+      return new Response(null, { status: 204 });
     } catch (error: any) {
       console.error("Delete country error:", error);
       return errorResponse("Failed to delete country", 500);
